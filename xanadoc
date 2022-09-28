@@ -1,0 +1,68 @@
+#!/usr/bin/perl
+use v5.14.1;
+
+# Sample implementation of hypertext concept outlined at
+# https://jakobib.github.io/hypertext2019/
+
+use YAML;
+use HTTP::Tiny;
+
+# by now emit as plain text without hyperlinks
+print assemble( YAML::LoadFile( $ARGV[0] ) );
+
+# retrieval function I -> D
+sub retrieve {
+    my $id = shift;
+
+    if ( $id =~ qr{^https?://} ) {
+        my $res = HTTP::Tiny->new->get($id);
+        return $res->{content} if $res->{success};
+    }
+    elsif ( -f $id ) {    # local file (for testing only!)
+        return do { local ( @ARGV, $/ ) = $id; <> };
+    }
+
+    die "Failed to retrieve document '$id'\n";
+}
+
+# helper function for caching
+sub cached {
+    my ($func, $id) = @_;
+    state %cache;
+
+    $cache{$id} = $func->($id) unless exists $cache{$id};
+    return $cache{$id};
+}
+
+# transclusion function S -> D
+sub transclude {
+    my ( $doc, $loc ) = @_;
+
+    my $range = $loc->{text}
+      // die "Locator languages other than 'text' (RFC 5147) not supported!\n";
+    $range =~ /^char=(\d+),(\d+)$/
+      or die "Cannot parse locator '$range', due to limited implementation!\n";
+    my ($start, $length) = ($1, $2);
+
+    $doc =~ s/^\N{BOM}//;    # remove BOM as required by RFC 5147
+    $doc =~ s/\r\n/\n/mg;    # normalize line endings (FIXME?)
+    
+    return substr $doc, $start, $length;
+}
+
+# hypertext assemble function E -> D
+sub assemble {
+    my $edl = shift;
+
+    my $sources = $edl->{sources} || [];
+
+    # warn "Inclusion of links not supported yet\n" if $edl->{links};
+
+    return join '', map {
+        warn $_->{document};
+        my $doc = cached(\&retrieve, $_->{document});
+        $doc = transclude( $doc, $_->{select} ) if $_->{select};
+
+        "[[" . $doc . "]]\n";
+    } @$sources;
+}

@@ -1,0 +1,53 @@
+# Adopted from https://xanadu.com/SampleEDL.txt
+
+sources:
+  #  - document: http://hyperland.com/xuCambDemo/WelcXu-D1y
+  #  select:
+  #    text: "char=25,535"      
+  #- document: http://xanadu.com/xanadox/MoeJuste/sources/0-Moe.pscr.txt
+  #  select: 
+  #    text: "char=7995,274"
+  #- document: http://xanadu.com/xanadox/MoeJuste/sources/2-DarwinDescentOfMan.txt
+  #  select:
+  #    text: "char=143522,213"
+  #- document: http://hyperland.com/xuCambDemo/WelcXu-D1y
+  #  select:
+  #    text: "char=630,55"
+  - document: http://hyperland.com/xuCambDemo/J.Ineffable.txt
+    select:
+      text: "char=299,343"
+  #- document: http://hyperland.com/xuCambDemo/WelcXu-D1y
+  #  select:
+  #    text: "char=687,51"
+  #- document: http://hyperland.com/xuCambDemo/J.Ineffable.txt
+  #  select:
+  #    text: "char=2879,376"
+  #- document: http://hyperland.com/xuCambDemo/WelcXu-D1y
+  #  select:
+  #    text: "char=740,115"
+
+links:
+  - from:
+      document: http://hyperland.com/xuCambDemo/WelcXu-D1y
+      select:
+        text: "char=301,30"
+    to:
+      document: http://hyperland.com/xuCambDemo/McKinleyAssassination.txt
+      select:
+        text: "char=358,108"
+  - from:
+      document: http://hyperland.com/xuCambDemo/WelcXu-D1y
+      select:
+        text: "char=344,29"
+    to:
+      document: http://hyperland.com/xuCambDemo/Einstein'sFridge.txt
+      select:
+        text: "char=134,336"
+  - from:
+      document: http://hyperland.com/xuCambDemo/WelcXu-D1y
+      select:
+        text: "char=386,46"
+    to:
+      document: http://hyperland.com/xuCambDemo/HTdefOgl.txt
+      select:
+        text: "char=23,191"
